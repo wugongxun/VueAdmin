@@ -16,11 +16,11 @@
                             首页
                         </el-dropdown-item>
                     </router-link>
-                    <a target="_blank" href="https://github.com/PanJiaChen/vue-admin-template/">
+                    <a target="_blank" href="https://github.com/wugongxun/VueAdmin">
                         <el-dropdown-item>Github</el-dropdown-item>
                     </a>
                     <el-dropdown-item divided @click.native="logout">
-                        <span style="display:block;">登出</span>
+                        <span style="display:block;">退出</span>
                     </el-dropdown-item>
                 </el-dropdown-menu>
             </el-dropdown>
@@ -63,6 +63,8 @@ export default {
     position: relative;
     background: #fff;
     box-shadow: 0 1px 4px rgba(0, 21, 41, .08);
+    position: sticky;
+    top: 0;
 
     .hamburger-container {
         line-height: 46px;
