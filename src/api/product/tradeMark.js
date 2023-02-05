@@ -6,8 +6,22 @@ export const reqTradeMarkList = (page, limit) => request({
     method: "get"
 });
 
+//添加品牌信息
+export const reqSaveTradeMark = tradeMark => request({
+    url: "/admin/product/baseTrademark/save",
+    method: "post",
+    data: tradeMark
+})
+
 //修改品牌信息
-// export const reqUpdateTradeMark = (id, logoUrl, tmName) => request({
-//     url: "/admin/product/baseTrademark/update",
-//     method: "put"
-// });
+export const reqUpdateTradeMark = tradeMark => request({
+    url: "/admin/product/baseTrademark/update",
+    method: "put",
+    data: tradeMark
+});
+
+//删除品牌信息
+export const reqDeleteTradeMark = id => request({
+    url: `/admin/product/baseTrademark/remove/${id}`,
+    method: "delete"
+});
