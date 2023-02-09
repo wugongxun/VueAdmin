@@ -25,3 +25,9 @@ export const reqDeleteTradeMark = id => request({
     url: `/admin/product/baseTrademark/remove/${id}`,
     method: "delete"
 });
+
+//获取所有的品牌
+export const reqAllTradeMark = () => request({
+    url: "/admin/product/baseTrademark/getTrademarkList",
+    method: "get"
+});

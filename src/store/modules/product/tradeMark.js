@@ -1,4 +1,10 @@
-import {reqDeleteTradeMark, reqSaveTradeMark, reqTradeMarkList, reqUpdateTradeMark} from "@/api/product/tradeMark";
+import {
+    reqAllTradeMark,
+    reqDeleteTradeMark,
+    reqSaveTradeMark,
+    reqTradeMarkList,
+    reqUpdateTradeMark
+} from "@/api/product/tradeMark";
 
 const actions = {
     async toTradeMarkList({commit}, {page, limit} = {page: 1, limit: 5}) {
@@ -32,15 +38,27 @@ const actions = {
         } else {
             return Promise.reject(new Error(res.message));
         }
+    },
+    async toAllTradeMark({commit}) {
+        let res = await reqAllTradeMark();
+        if (res.code == 200) {
+            commit("TOALLTRADEMARK", res.data);
+        } else {
+            return res;
+        }
     }
 };
 const mutations = {
     TOTRADEMARKLIST(state, tradeMarkList) {
         state.tradeMarkList = tradeMarkList;
+    },
+    TOALLTRADEMARK(state, allTradeMarkList) {
+        state.allTradeMarkList = allTradeMarkList;
     }
 };
 const state = {
-    tradeMarkList: {}
+    tradeMarkList: {},
+    allTradeMarkList: []
 };
 
 export default {

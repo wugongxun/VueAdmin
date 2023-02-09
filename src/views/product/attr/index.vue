@@ -30,7 +30,7 @@
                         label="属性值列表"
                         align="center">
                         <template v-slot="scope">
-                            <el-tag class="tag" type="success" v-for="attrValue in scope.row.attrValueList" :key="attrValue.id">{{attrValue.valueName}}</el-tag>
+                            <el-tag type="success" v-for="attrValue in scope.row.attrValueList" :key="attrValue.id">{{attrValue.valueName}}</el-tag>
                         </template>
                     </el-table-column>
                     <el-table-column
@@ -180,9 +180,9 @@ export default {
                 }
             });
 
-            this.toSaveAttrInfo(this.attrInfo).then(() => {
+            this.toSaveAttrInfo(this.attrInfo).then(async () => {
                 this.$message.success("保存成功");
-                this.toAttrInfoList(this.form);
+                await this.toAttrInfoList(this.form);
                 this.isShowTable = true;
             }).catch(res => {
                 this.$message.error(res);

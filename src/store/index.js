@@ -7,6 +7,8 @@ import user from './modules/user'
 import tradeMark from "@/store/modules/product/tradeMark";
 import category from "@/store/modules/product/category";
 import attr from "@/store/modules/product/attr";
+import spu from "@/store/modules/product/spu";
+import sku from "@/store/modules/product/sku";
 
 Vue.use(Vuex)
 
@@ -17,7 +19,9 @@ const store = new Vuex.Store({
         user,
         tradeMark,
         category,
-        attr
+        attr,
+        spu,
+        sku
     },
     getters
 })

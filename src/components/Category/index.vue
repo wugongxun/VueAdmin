@@ -42,6 +42,7 @@ export default {
         },
         selectedCategory3() {
             this.toAttrInfoList(this.form);
+            this.$emit("getSpuList");
         }
     },
     mounted() {

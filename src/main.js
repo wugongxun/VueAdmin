@@ -13,8 +13,9 @@ import store from './store'
 import router from './router'
 
 import '@/icons' // icon
-import '@/permission'
-import Category from "@/components/Category"; // permission control
+import '@/permission' // permission control
+import Category from "@/components/Category";
+import HintButton from "@/components/HintButton";
 
 /**
  * If you don't want to use mock-server
@@ -34,6 +35,7 @@ if (process.env.NODE_ENV === 'production') {
 // 如果想要中文版 element-ui，按如下方式声明
 Vue.use(ElementUI)
 Vue.component(Category.name, Category);
+Vue.component(HintButton.name, HintButton);
 
 Vue.config.productionTip = false
 
