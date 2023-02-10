@@ -33,7 +33,7 @@
                         <template v-slot="{row, $index}">
                             <hint-button type="success" icon="el-icon-plus" title="添加sku" @click="addSku(row)"></hint-button>
                             <hint-button type="warning" icon="el-icon-edit" title="修改spu" @click="updateSpu(row)"></hint-button>
-                            <hint-button type="info" icon="el-icon-info" title="查看当前spu全部sku列表"></hint-button>
+                            <hint-button type="info" icon="el-icon-info" title="查看当前spu全部sku列表" @click="showAllSku(row)"></hint-button>
                             <el-popconfirm :title="`确认删除${row.spuName}吗？`" @onConfirm="deleteSpu(row)">
                                 <hint-button type="danger" icon="el-icon-delete" title="删除spu" slot="reference"></hint-button>
                             </el-popconfirm>
@@ -58,9 +58,21 @@
             <SpuForm v-show="scene == 1" @changeScene="changeScene" ref="spuForm" @refreshSpuList="getSpuList"></SpuForm>
 
             <!--添加sku-->
-            <SkuForm v-show="scene == 2" @changeScene="changeScene" ref="skuForm">
+            <SkuForm v-show="scene == 2" @changeScene="changeScene" ref="skuForm"></SkuForm>
 
-            </SkuForm>
+            <!--对话框-->
+            <el-dialog :title="`${spuName}的sku列表`" :visible.sync="dialogTableVisible" :before-close="closeDialog">
+                <el-table :data="skuList" v-loading="loading">
+                    <el-table-column property="skuName" label="名称" width="150" align="center"></el-table-column>
+                    <el-table-column property="price" label="价格" width="200" align="center"></el-table-column>
+                    <el-table-column property="weight" label="重量" align="center"></el-table-column>
+                    <el-table-column property="address" label="默认图片" align="center">
+                        <template v-slot="{row}">
+                            <ImagePopover :url="row.skuDefaultImg" :height="50"></ImagePopover>
+                        </template>
+                    </el-table-column>
+                </el-table>
+            </el-dialog>
         </el-card>
     </div>
 </template>
@@ -75,6 +87,9 @@ export default {
     components: {SkuForm, SpuForm},
     data() {
         return {
+            dialogTableVisible: false,
+            spuName: "",
+            loading: true,
             pager: {
                 page: 1,
                 limit: 5
@@ -84,6 +99,7 @@ export default {
     },
     computed: {
         ...mapState("category", ["form"]),
+        ...mapState("sku", ["skuList"]),
         total() {
             return this.$store.getters.total;
         },
@@ -94,6 +110,7 @@ export default {
     methods: {
         ...mapActions("spu", ["toSpuList", "toDeleteSpu"]),
         ...mapActions("tradeMark", ["toAllTradeMark"]),
+        ...mapActions("sku", ["toSkuListBySpuId"]),
         getSpuList(page) {
             if (page) {
                 this.pager.page = page;
@@ -131,6 +148,17 @@ export default {
         addSku(row) {
             this.$refs.skuForm.init(row);
             this.scene = 2;
+        },
+        async showAllSku(row) {
+            this.dialogTableVisible = true;
+            await this.toSkuListBySpuId(row.id);
+            this.spuName = row.spuName;
+            this.loading = false;
+        },
+        closeDialog(done) {
+            this.loading = true;
+            this.$store.state.sku.skuList = [];
+            done();
         }
     }
 }

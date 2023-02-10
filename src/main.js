@@ -16,6 +16,7 @@ import '@/icons' // icon
 import '@/permission' // permission control
 import Category from "@/components/Category";
 import HintButton from "@/components/HintButton";
+import ImagePopover from "@/components/ImagePopover/ImagePopover";
 
 /**
  * If you don't want to use mock-server
@@ -36,6 +37,7 @@ if (process.env.NODE_ENV === 'production') {
 Vue.use(ElementUI)
 Vue.component(Category.name, Category);
 Vue.component(HintButton.name, HintButton);
+Vue.component(ImagePopover.name, ImagePopover);
 
 Vue.config.productionTip = false
 

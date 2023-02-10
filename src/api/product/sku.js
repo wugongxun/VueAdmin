@@ -71,3 +71,27 @@ export const reqSaveSkuInfo = skuInfo => request({
     method: "post",
     data: skuInfo
 });
+
+//根据spuId查询sku列表
+export const reqSkuListBySpuId = spuId => request({
+    url: `/admin/product/findBySpuId/${spuId}`,
+    method: "get"
+});
+
+//分页查询skuInfo
+export const reqSkuInfoList = (page, limit) => request({
+    url: `/admin/product/list/${page}/${limit}`,
+    method: "get"
+});
+
+//上架
+export const reqOnSale = skuId => request({
+    url: `/admin/product/onSale/${skuId}`,
+    method: "get"
+});
+
+//下架
+export const reqCancelSale = skuId => request({
+    url: `/admin/product/cancelSale/${skuId}`,
+    method: "get"
+});

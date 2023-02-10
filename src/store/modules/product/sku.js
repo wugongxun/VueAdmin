@@ -1,5 +1,12 @@
 import {reqSpuImageList} from "@/api/product/spu";
-import {reqAttrInfoList, reqSaleAttrList, reqSaveSkuInfo} from "@/api/product/sku";
+import {
+    reqAttrInfoList, reqCancelSale,
+    reqOnSale,
+    reqSaleAttrList,
+    reqSaveSkuInfo,
+    reqSkuInfoList,
+    reqSkuListBySpuId
+} from "@/api/product/sku";
 
 const actions = {
     async toSpuImageList({commit}, spuId) {
@@ -33,6 +40,38 @@ const actions = {
         } else {
             return res;
         }
+    },
+    async toSkuListBySpuId({commit}, spuId) {
+        let res = await reqSkuListBySpuId(spuId);
+        if (res.code == 200) {
+            commit("TOSKULISTBYSPUID", res.data);
+        } else {
+            return res;
+        }
+    },
+    async toSkuInfoList({commit}, {page, limit}) {
+        let res = await reqSkuInfoList(page, limit);
+        if (res.code == 200) {
+            commit("TOSKUINFOLIST", res.data);
+        } else {
+            return res;
+        }
+    },
+    async toOnSale({commit}, skuId) {
+        let res = reqOnSale(skuId);
+        if (res.code == 200) {
+            return res.message;
+        } else {
+            return res;
+        }
+    },
+    async toCancelSale({commit}, skuId) {
+        let res = reqCancelSale(skuId);
+        if (res.code == 200) {
+            return res.message;
+        } else {
+            return res;
+        }
     }
 };
 
@@ -46,6 +85,12 @@ const mutations = {
     },
     TOATTRINFOLIST(state, attrInfoList) {
         state.attrInfoList = attrInfoList;
+    },
+    TOSKULISTBYSPUID(state, skuList) {
+        state.skuList = skuList;
+    },
+    TOSKUINFOLIST(state, skuInfoList) {
+        state.skuInfoList = skuInfoList;
     }
 };
 
@@ -53,7 +98,9 @@ const mutations = {
 const state = {
     spuImageList: [],
     saleAttrList: [],
-    attrInfoList: []
+    attrInfoList: [],
+    skuList: [],
+    skuInfoList: {}
 };
 
 export default {

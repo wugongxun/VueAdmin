@@ -27,8 +27,8 @@
                         <el-select v-model="attrInfo.selected" placeholder="请选择">
                             <el-option :value="`${attrInfo.id}:${attrValue.id}`"
                                        :label="attrValue.valueName"
-                                       v-for="attrValue in attrInfo.attrValueList"
-                                       :key="attrValue.id">
+                                       v-for="(attrValue, index) in attrInfo.attrValueList"
+                                       :key="index">
                             </el-option>
                         </el-select>
                     </el-form-item>
@@ -41,8 +41,8 @@
                         <el-select v-model="saleAttr.selected" placeholder="请选择">
                             <el-option :value="`${saleAttr.id}:${saleAttrValue.id}`"
                                        :label="saleAttrValue.saleAttrValueName"
-                                       v-for="saleAttrValue in saleAttr.spuSaleAttrValueList"
-                                       :key="saleAttrValue.id">
+                                       v-for="(saleAttrValue, index) in saleAttr.spuSaleAttrValueList"
+                                       :key="index">
                             </el-option>
                         </el-select>
                     </el-form-item>
@@ -60,12 +60,7 @@
                         label="图片"
                         align="center">
                         <template v-slot="{row, $index}">
-                            <el-popover placement="top-start" title="" trigger="hover">
-                                <div style="width: 150px;height: 150px;display: flex;align-items: center">
-                                    <img :src="row.imgUrl" alt="" style="width: 150px;">
-                                </div>
-                                <img slot="reference" :src="row.imgUrl" style="height: 50px;">
-                            </el-popover>
+                            <ImagePopover :url="row.imgUrl" :height="50"></ImagePopover>
                         </template>
                     </el-table-column>
                     <el-table-column
@@ -85,7 +80,7 @@
             </el-form-item>
 
             <el-form-item>
-                <el-button type="primary">保存</el-button>
+                <el-button type="primary" @click="saveSkuInfo()">保存</el-button>
                 <el-button @click="cancel()">取消</el-button>
             </el-form-item>
         </el-form>
@@ -124,6 +119,7 @@ export default {
     methods: {
         ...mapActions("sku", ["toSpuImageList", "toSaleAttrList", "toAttrInfoList", "toSaveSkuInfo"]),
         cancel() {
+            Object.assign(this._data, this.$options.data());
             this.$emit("changeScene", 0);
         },
         init(row) {
@@ -148,6 +144,40 @@ export default {
             });
             row.isDefault = "1";
             this.skuInfo.skuDefaultImg = row.imgUrl;
+        },
+        saveSkuInfo() {
+            this.attrInfoList.forEach(item => {
+                if (item.selected) {
+                    let [attrId, valueId] = item.selected.split(":");
+                    this.skuInfo.skuAttrValueList.push({
+                        attrId,
+                        valueId,
+                        attrName: item.attrName,
+                        valueName: item.attrValueList.find(item => item.id = valueId).valueName
+                    });
+                }
+            });
+
+            this.saleAttrList.forEach(item => {
+                if (item.selected) {
+                    let [saleAttrId, saleAttrValueId] = item.selected.split(":");
+                    this.skuInfo.skuSaleAttrValueList.push({
+                        saleAttrId,
+                        saleAttrValueId,
+                        saleAttrName: item.saleAttrName,
+                        saleAttrValueName: item.spuSaleAttrValueList.find(item => item.id = saleAttrValueId).saleAttrValueName,
+                        spuId: this.skuInfo.spuId
+                    });
+                }
+            });
+
+            this.skuInfo.skuImageList = this.selectedImage;
+            this.toSaveSkuInfo(this.skuInfo).then(res => {
+                this.$message.success(res);
+                this.cancel();
+            }).catch(res => {
+                this.$message.error(res);
+            });
         }
     }
 }

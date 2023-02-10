@@ -28,13 +28,8 @@
                 label="品牌LOGO"
                 align="center"
             >
-                <template v-slot="scope">
-                    <el-popover placement="top-start" title="" trigger="hover">
-                        <div style="width: 150px;height: 150px;display: flex;align-items: center">
-                            <img :src="scope.row.logoUrl" alt="" style="width: 150px;">
-                        </div>
-                        <img slot="reference" :src="scope.row.logoUrl" style="height: 50px;">
-                    </el-popover>
+                <template v-slot="{row}">
+                    <ImagePopover :url="row.logoUrl" :height="50"></ImagePopover>
                 </template>
             </el-table-column>
             <el-table-column
