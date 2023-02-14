@@ -95,3 +95,9 @@ export const reqCancelSale = skuId => request({
     url: `/admin/product/cancelSale/${skuId}`,
     method: "get"
 });
+
+//根据id获取sku
+export const reqSkuById = skuId => request({
+    url: `/admin/product/getSkuById/${skuId}`,
+    method: "get"
+});

@@ -14,6 +14,8 @@ import router from './router'
 
 import '@/icons' // icon
 import '@/permission' // permission control
+import '@/assets/iconfont/iconfont.css' //iconfont
+
 import Category from "@/components/Category";
 import HintButton from "@/components/HintButton";
 import ImagePopover from "@/components/ImagePopover/ImagePopover";

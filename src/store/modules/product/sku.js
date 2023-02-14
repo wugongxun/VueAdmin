@@ -3,7 +3,7 @@ import {
     reqAttrInfoList, reqCancelSale,
     reqOnSale,
     reqSaleAttrList,
-    reqSaveSkuInfo,
+    reqSaveSkuInfo, reqSkuById,
     reqSkuInfoList,
     reqSkuListBySpuId
 } from "@/api/product/sku";
@@ -72,6 +72,14 @@ const actions = {
         } else {
             return res;
         }
+    },
+    async toSkuById({commit}, skuId) {
+        let res = await reqSkuById(skuId);
+        if (res.code == 200) {
+            commit("TOSKUBYID", res.data);
+        } else {
+            return res;
+        }
     }
 };
 
@@ -91,6 +99,9 @@ const mutations = {
     },
     TOSKUINFOLIST(state, skuInfoList) {
         state.skuInfoList = skuInfoList;
+    },
+    TOSKUBYID(state, skuInfo) {
+        state.skuInfo = skuInfo;
     }
 };
 
@@ -100,7 +111,8 @@ const state = {
     saleAttrList: [],
     attrInfoList: [],
     skuList: [],
-    skuInfoList: {}
+    skuInfoList: {},
+    skuInfo: {}
 };
 
 export default {

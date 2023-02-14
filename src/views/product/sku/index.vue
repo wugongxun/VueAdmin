@@ -35,7 +35,7 @@
                 align="center">
             </el-table-column>
             <el-table-column
-                prop=""
+                prop="price"
                 width="180"
                 label="价格(元)"
                 align="center">
@@ -47,7 +47,7 @@
                     <el-button type="warning" icon="el-icon-bottom" v-if="row.isSale == 1" @click="cancelSale(row)"></el-button>
                     <el-button type="success" icon="el-icon-top" v-else @click="onSale(row)"></el-button>
                     <el-button type="primary" icon="el-icon-edit" @click="$message.info('正在开发中~')"></el-button>
-                    <el-button type="info" icon="el-icon-info"></el-button>
+                    <el-button type="info" icon="el-icon-info" @click="showSku(row)"></el-button>
                     <el-button type="danger" icon="el-icon-delete"></el-button>
                 </template>
             </el-table-column>
@@ -65,6 +65,41 @@
             @current-change="pageChange"
             @size-change="limitChange">
         </el-pagination>
+
+        <!--抽屉-->
+        <el-drawer
+            :withHeader="false"
+            :visible.sync="drawer"
+            size="50%">
+            <div class="skuInfoDetail">
+                <div class="row">
+                    <label>名称</label>
+                    <span>{{skuInfo.skuName}}</span>
+                </div>
+                <div class="row">
+                    <label>描述</label>
+                    <span>{{skuInfo.skuDesc}}</span>
+                </div>
+                <div class="row">
+                    <label>价格</label>
+                    <span>{{skuInfo.price}}</span>
+                </div>
+                <div class="row">
+                    <label>平台属性</label>
+                    <span>
+                        <el-tag type="success" v-for="attr in skuInfo.skuAttrValueList" :key="attr.id">{{attr.valueName}}</el-tag>
+                    </span>
+                </div>
+                <div class="row">
+                    <label>商品图片</label>
+                    <el-carousel height="500px">
+                        <el-carousel-item v-for="img in skuInfo.skuImageList" :key="img.id">
+                            <img :src="img.imgUrl" alt="">
+                        </el-carousel-item>
+                    </el-carousel>
+                </div>
+            </div>
+        </el-drawer>
     </el-card>
 </template>
 
@@ -78,14 +113,15 @@ export default {
             pager: {
                 page: 1,
                 limit: 10
-            }
+            },
+            drawer: false
         }
     },
     computed: {
-        ...mapState("sku", ["skuInfoList"])
+        ...mapState("sku", ["skuInfoList", "skuInfo"])
     },
     methods: {
-        ...mapActions("sku", ["toSkuInfoList", "toOnSale", "toCancelSale"]),
+        ...mapActions("sku", ["toSkuInfoList", "toOnSale", "toCancelSale", "toSkuById"]),
         pageChange(changePage) {
             this.pager.page = changePage;
             this.toSkuInfoList(this.pager);
@@ -105,6 +141,10 @@ export default {
                 this.$message.success("下架成功");
                 row.isSale = 0;
             });
+        },
+        async showSku(row) {
+            await this.toSkuById(row.id);
+            this.drawer = true;
         }
     },
     mounted() {
@@ -113,9 +153,60 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="less">
 .el-pagination {
     text-align: center;
     margin-top: 20px;
 }
+
+.skuInfoDetail {
+    height: 100%;
+    padding: 20px;
+    font-size: 18px;
+    display: flex;
+    align-items: stretch;
+    justify-content: space-around;
+    flex-direction: column;
+
+    .row {
+        display: flex;
+
+        label {
+            width: 20%;
+            margin-right: 20px;
+            text-align: right;
+            line-height: 32px;
+        }
+
+        span {
+            flex: 1;
+            line-height: 32px;
+
+            .el-tag {
+                margin-left: 10px;
+            }
+        }
+        .el-carousel {
+            flex: 1;
+
+            .el-carousel__item {
+                text-align: center;
+
+                img {
+                    height: 100%;
+                }
+            }
+
+            /deep/.el-carousel__button {
+                background-color: #1482f0;
+                height: 30px;
+                width: 30px;
+                border-radius: 50%;
+            }
+        }
+    }
+}
+
+
+
 </style>
